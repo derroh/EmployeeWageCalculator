@@ -1,5 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using A1YourFirstnameLastname;
+using ConsoleTables;
 using System;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
@@ -645,21 +646,21 @@ void AddNewEmployee(Employee employee)
 
 static void DisplayInTable(List<Employee> employees)
 {
-    var groups = employees.GroupBy(x => x.EmployeeType);
+    var groups = employees.GroupBy(x => x.EmployeeType).Distinct();
 
     foreach (var group in groups)
     {
         Console.WriteLine($"\n{group.Key}");
-        // Set table headers
-        string header = String.Format("{0,-15} {1,-30} {2,-40} {3,-20} {4,-20} {5,-20}", "Employee Id", "Employee Name", "Employee Type", "Gross Earnings", "Net Earnings", "Tax");
-        Console.WriteLine(header);
-        Console.WriteLine(new string('-', header.Length)); // draw line
+  
+        var table = new ConsoleTable("Employee Id", "Employee Name", "Employee Type", "Gross Earnings", "Net Earnings", "Tax");
 
         foreach (var employee in group)
         {
-            Console.WriteLine(String.Format("{0,-15} {1,-30} {2,-40} {3, -20} {4, -20} {5, -20}", employee.EmployeeId, employee.EmployeeName, employee.EmployeeType, employee.GrossEarnings, employee.NetEarnings, employee.Tax));
-        }
-        Console.WriteLine("\n");
+            table.AddRow(employee.EmployeeId, employee.EmployeeName, employee.EmployeeType, $"${employee.GrossEarnings}", $"${employee.NetEarnings}", $"${employee.Tax}");
+        }       
+
+        table.Write();
+        Console.WriteLine();
     }    
 }
 
@@ -673,3 +674,55 @@ void PopulateSampleData()
     employees.Add(new SalaryPlusCommissionEmployee { EmployeeId = 4, EmployeeName = "Ekira", EmployeeType = EmployeeType.SalaryPlusCommissionEmployee, WeeklySalary = 200, CommissionRate = 5, GrossSales = 20000 });
 }
 
+public abstract class Employee
+{
+    public EmployeeType EmployeeType { get; set; }
+    public int EmployeeId { get; set; }
+    public string EmployeeName { get; set; }
+
+    public abstract decimal GrossEarnings { get; }
+
+    public decimal Tax => GrossEarnings * 0.2m;
+
+    public decimal NetEarnings => GrossEarnings - Tax;
+}
+public class CommissionEmployee : Employee
+{
+    public decimal GrossSales { get; set; }
+    public decimal CommissionRate { get; set; }
+
+    public override decimal GrossEarnings => GrossSales * CommissionRate;
+}
+public class HourlyEmployee : Employee
+{
+    public decimal HoursWorked { get; set; }
+    public decimal HourlyWage { get; set; }
+
+    public override decimal GrossEarnings
+    {
+        get
+        {
+            return HoursWorked <= 40 ? HourlyWage * HoursWorked :
+                40 * HourlyWage + (HoursWorked - 40) * HourlyWage * 1.5m;
+        }
+    }
+}
+public class SalariedEmployee : Employee
+{
+    public decimal WeeklySalary { get; set; }
+
+    public override decimal GrossEarnings => WeeklySalary;
+}
+public class SalaryPlusCommissionEmployee : CommissionEmployee
+{
+    public decimal WeeklySalary { get; set; }
+
+    public override decimal GrossEarnings => WeeklySalary + base.GrossEarnings;
+}
+public enum EmployeeType
+{
+    HourlyEmployee = 1,
+    CommissionEmployee = 2,
+    SalariedEmployee = 3,
+    SalaryPlusCommissionEmployee = 4
+}
