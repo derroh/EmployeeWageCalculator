@@ -8,9 +8,9 @@ namespace A1YourFirstnameLastname
 {
     public enum EmployeeType
     {
-        HourlyEmployee,
-        CommissionEmployee,
-        SalariedEmployee,
-        SalaryPlusCommissionEmployee
+        HourlyEmployee = 1,
+        CommissionEmployee = 2,
+        SalariedEmployee = 3,
+        SalaryPlusCommissionEmployee = 4
     }
 }
