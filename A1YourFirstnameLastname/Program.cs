@@ -1,6 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-using A1YourFirstnameLastname;
-using ConsoleTables;
+﻿using ConsoleTables;
 using System;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
@@ -542,7 +540,6 @@ void AddSalaryPlusCommissionEmployee()
         break;
     }
 }
-
 void AddSalariedEmployee()
 {
     Console.WriteLine("Please Provide employee name");
@@ -567,7 +564,6 @@ void AddSalariedEmployee()
         break;
     }
 }
-
 void AddCommissionEmployee()
 {
     Console.WriteLine("Please Provide employee name");
@@ -601,7 +597,6 @@ void AddCommissionEmployee()
         break;
     }
 }
-
 void AddHourlyEmployee()
 {
     Console.WriteLine("Please Provide employee name");
@@ -650,17 +645,55 @@ static void DisplayInTable(List<Employee> employees)
 
     foreach (var group in groups)
     {
-        Console.WriteLine($"\n{group.Key}");
-  
-        var table = new ConsoleTable("Employee Id", "Employee Name", "Employee Type", "Gross Earnings", "Net Earnings", "Tax");
-
-        foreach (var employee in group)
+        if (group.Key == EmployeeType.HourlyEmployee)
         {
-            table.AddRow(employee.EmployeeId, employee.EmployeeName, employee.EmployeeType, $"${employee.GrossEarnings}", $"${employee.NetEarnings}", $"${employee.Tax}");
-        }       
+            var table = new ConsoleTable("Employee Id", "Employee Name", "Employee Type", "Hourly Wage", "Hours Worked");
 
-        table.Write();
-        Console.WriteLine();
+            foreach (HourlyEmployee employee in group)
+            {
+                table.AddRow(employee.EmployeeId, employee.EmployeeName, employee.EmployeeType, $"${employee.HourlyWage}", employee.HoursWorked);
+            }
+
+            table.Write();
+            Console.WriteLine();
+        }
+        else if (group.Key == EmployeeType.CommissionEmployee)
+        {
+            var table = new ConsoleTable("Employee Id", "Employee Name", "Employee Type", "Commission Rate", "Gross Sales");
+
+            foreach (CommissionEmployee employee in group)
+            {
+                table.AddRow(employee.EmployeeId, employee.EmployeeName, employee.EmployeeType, $"{employee.CommissionRate}%", $"${employee.GrossSales}");
+            }
+
+            table.Write();
+            Console.WriteLine();
+        }
+        else if (group.Key == EmployeeType.SalariedEmployee)
+        {
+            var table = new ConsoleTable("Employee Id", "Employee Name", "Employee Type", "Weekly Salary");
+
+            foreach (SalariedEmployee employee in group)
+            {
+                table.AddRow(employee.EmployeeId, employee.EmployeeName, employee.EmployeeType, $"${employee.WeeklySalary}");
+            }
+
+            table.Write();
+            Console.WriteLine();
+        }
+        else if (group.Key == EmployeeType.SalaryPlusCommissionEmployee)
+        {
+            var table = new ConsoleTable("Employee Id", "Employee Name", "Employee Type", "Weekly Salary", "Commission Rate", "Gross Sales");
+
+            foreach (SalaryPlusCommissionEmployee employee in group)
+            {
+                table.AddRow(employee.EmployeeId, employee.EmployeeName, employee.EmployeeType, $"${employee.WeeklySalary}", $"{employee.CommissionRate}%", $"${employee.GrossSales}");
+            }
+
+            table.Write();
+            Console.WriteLine();
+        }
+
     }    
 }
 
