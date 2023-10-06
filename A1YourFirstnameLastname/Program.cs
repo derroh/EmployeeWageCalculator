@@ -109,6 +109,7 @@ int DisplayDeleteEmployeeMenu()
         return num1;
     }
 }
+
 void deleteEmployee(EmployeeType employeeType)
 {
     //first display a list of all employees from the selected category
@@ -171,7 +172,7 @@ void EditEmployee()
     do
     {
         // Display Main Menu and handle user choice
-        switch (DisplayDeleteEmployeeMenu())
+        switch (DisplayEditEmployeeMenu())
         {
             case 1: EditHourlyEmployee(); break;
             case 2: EditCommissionEmployee(); break;
@@ -181,10 +182,35 @@ void EditEmployee()
         }
     } while (runEditEmployee);
 }
+int DisplayEditEmployeeMenu()
+{
+    Console.WriteLine("\n" +
+        "** Select option** \n" +
+        "1 - Edit Hourly Employee\n" +
+        "2 - Edit Commission Employee\n" +
+        "3 - Edit Salaried Employee\n" +
+        "4 - Edit Salary Plus Commission Employee\n" +
+        "5 - Back to Main Menu\r\n" +
+        "******************************" +
+        "\n");
 
+    while (true)
+    {
+        string choice = Console.ReadLine();
+
+        if (!int.TryParse(choice, out int num1))
+        {
+            Console.WriteLine("Invalid selection. Please select a number between 0-5");
+            continue;
+        }
+        return num1;
+    }
+}
 void EditSalaryPlusCommissionEmployee()
 {
-    Console.WriteLine("Please enter an employee Id to delete");
+    DisplayInTable(employees);
+
+    Console.WriteLine("Please enter an employee Id to edit");
 
     while (true)
     {
@@ -196,7 +222,10 @@ void EditSalaryPlusCommissionEmployee()
             continue;
         }
 
-        var employee = employees.FirstOrDefault(x => x.EmployeeId == empId);
+        Console.WriteLine("Please Provide employee name");
+        string name = Console.ReadLine();
+
+        var employee = employees.Find(x => x.EmployeeId == empId) as SalaryPlusCommissionEmployee;        
 
         if (employee != null)
         {
@@ -231,33 +260,202 @@ void EditSalaryPlusCommissionEmployee()
             }
 
             employee.EmployeeName = name;
-            employee.EmployeeType = EmployeeType.HourlyEmployee;
+            employee.EmployeeType = EmployeeType.SalaryPlusCommissionEmployee;
             employee.CommissionRate = num1;
             employee.GrossSales = num2;
             employee.WeeklySalary = num3;
+
+            DisplayInTable(employees);
 
             break;
         }
         else
         {
-            Console.WriteLine($"Deletion Failed! Employee with id {employeeId} was not found.\n");
+            Console.WriteLine($"Update Failed! Employee with id {employeeId} was not found.\n");
         }
     } 
 }
 
 void EditSalariedEmployee()
 {
-   
+    DisplayInTable(employees);
+
+    Console.WriteLine("Please enter an employee Id to edit");
+
+    while (true)
+    {
+        string employeeId = Console.ReadLine();
+
+        if (!int.TryParse(employeeId, out int empId))
+        {
+            Console.WriteLine("Invalid input. Please input an integer value");
+            continue;
+        }
+
+        Console.WriteLine("Please Provide employee name");
+        string name = Console.ReadLine();
+
+        var employee = employees.Find(x => x.EmployeeId == empId) as SalariedEmployee;
+
+        if (employee != null)
+        {
+            //update
+
+            Console.WriteLine("Please Provide commision rate");
+            string commisionRate = Console.ReadLine();
+
+            if (!int.TryParse(commisionRate, out int num1))
+            {
+                Console.WriteLine("Invalid number. Try again.");
+                continue;
+            }
+
+
+            Console.WriteLine("Please Provide your weekly salary");
+            string weeklySalary = Console.ReadLine();
+
+            if (!decimal.TryParse(weeklySalary, out decimal num3))
+            {
+                Console.WriteLine("Invalid number. Try again.");
+                continue;
+            }
+
+            employee.EmployeeName = name;
+            employee.EmployeeType = EmployeeType.SalariedEmployee;
+           
+            employee.WeeklySalary = num3;
+
+            DisplayInTable(employees);
+
+            break;
+        }
+        else
+        {
+            Console.WriteLine($"Update Failed! Employee with id {employeeId} was not found.\n");
+        }
+    }
 }
 
 void EditCommissionEmployee()
 {
-   
+    DisplayInTable(employees);
+
+    Console.WriteLine("Please enter an employee Id to edit");
+
+    while (true)
+    {
+        string employeeId = Console.ReadLine();
+
+        if (!int.TryParse(employeeId, out int empId))
+        {
+            Console.WriteLine("Invalid input. Please input an integer value");
+            continue;
+        }
+
+        Console.WriteLine("Please Provide employee name");
+        string name = Console.ReadLine();
+
+        var employee = employees.Find(x => x.EmployeeId == empId) as CommissionEmployee;
+
+        if (employee != null)
+        {
+            //update
+
+            Console.WriteLine("Please Provide commision rate");
+            string commisionRate = Console.ReadLine();
+
+            if (!int.TryParse(commisionRate, out int num1))
+            {
+                Console.WriteLine("Invalid number. Try again.");
+                continue;
+            }
+
+
+            Console.WriteLine("Please Provide your gross sales");
+            string grossSales = Console.ReadLine();
+
+            if (!decimal.TryParse(grossSales, out decimal num2))
+            {
+                Console.WriteLine("Invalid number. Try again.");
+                continue;
+            }
+                        
+
+            employee.EmployeeName = name;
+            employee.EmployeeType = EmployeeType.CommissionEmployee;
+            employee.CommissionRate = num1;
+            employee.GrossSales = num2;
+
+            DisplayInTable(employees);
+
+            break;
+        }
+        else
+        {
+            Console.WriteLine($"Update Failed! Employee with id {employeeId} was not found.\n");
+        }
+    }
 }
 
 void EditHourlyEmployee()
 {
-   
+    DisplayInTable(employees);
+
+    Console.WriteLine("Please enter an employee Id to edit");
+
+    while (true)
+    {
+        string employeeId = Console.ReadLine();
+
+        if (!int.TryParse(employeeId, out int empId))
+        {
+            Console.WriteLine("Invalid input. Please input an integer value");
+            continue;
+        }
+
+        Console.WriteLine("Please Provide employee name");
+        string name = Console.ReadLine();
+
+        var employee = employees.Find(x => x.EmployeeId == empId) as HourlyEmployee;
+
+        if (employee != null)
+        {
+            //update
+
+            Console.WriteLine("Please Provide hours worked");
+            string commisionRate = Console.ReadLine();
+
+            if (!int.TryParse(commisionRate, out int num1))
+            {
+                Console.WriteLine("Invalid number. Try again.");
+                continue;
+            }
+
+
+            Console.WriteLine("Please Provide hourly wage");
+            string grossSales = Console.ReadLine();
+
+            if (!decimal.TryParse(grossSales, out decimal num2))
+            {
+                Console.WriteLine("Invalid number. Try again.");
+                continue;
+            }
+
+
+            employee.EmployeeName = name;
+            employee.EmployeeType = EmployeeType.HourlyEmployee;
+            employee.HoursWorked = num1;
+            employee.HourlyWage = num2;
+
+            DisplayInTable(employees);
+
+            break;
+        }
+        else
+        {
+            Console.WriteLine($"Update Failed! Employee with id {employeeId} was not found.\n");
+        }
+    }
 }
 
 void AddEmployee()
@@ -447,16 +645,22 @@ void AddNewEmployee(Employee employee)
 
 static void DisplayInTable(List<Employee> employees)
 {
-    // Set table headers
-    string header = String.Format("{0,-15} {1,-30} {2,-40} {3,-20} {4,-20} {5,-20}", "Employee Id", "Employee Name", "Employee Type", "Gross Earnings", "Net Earnings", "Tax");
-    Console.WriteLine(header);
-    Console.WriteLine(new string('-', header.Length)); // draw line
+    var groups = employees.GroupBy(x => x.EmployeeType);
 
-    foreach (var employee in employees)
+    foreach (var group in groups)
     {
-        Console.WriteLine(String.Format("{0,-15} {1,-30} {2,-40} {3, -20} {4, -20} {5, -20}", employee.EmployeeId, employee.EmployeeName, employee.EmployeeType, employee.GrossEarnings, employee.NetEarnings, employee.Tax));
-    }
-    Console.WriteLine("\n");
+        Console.WriteLine($"\n{group.Key}");
+        // Set table headers
+        string header = String.Format("{0,-15} {1,-30} {2,-40} {3,-20} {4,-20} {5,-20}", "Employee Id", "Employee Name", "Employee Type", "Gross Earnings", "Net Earnings", "Tax");
+        Console.WriteLine(header);
+        Console.WriteLine(new string('-', header.Length)); // draw line
+
+        foreach (var employee in group)
+        {
+            Console.WriteLine(String.Format("{0,-15} {1,-30} {2,-40} {3, -20} {4, -20} {5, -20}", employee.EmployeeId, employee.EmployeeName, employee.EmployeeType, employee.GrossEarnings, employee.NetEarnings, employee.Tax));
+        }
+        Console.WriteLine("\n");
+    }    
 }
 
 
